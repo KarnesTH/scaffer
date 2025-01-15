@@ -1,7 +1,7 @@
 use clap::Parser;
 use scaffer::prelude::*;
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
 
     match cli.commands {
@@ -10,10 +10,10 @@ fn main() {
             name,
             path,
         } => {
-            println!("Creating a new project from a template");
-            println!("Language: {:?}", language);
-            println!("Name: {:?}", name);
-            println!("Path: {:?}", path);
+            let mut create_command = CreateCommand::default();
+            create_command.run_create(language, name, path)?;
         }
     }
+
+    Ok(())
 }
