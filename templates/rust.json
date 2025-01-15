@@ -1,0 +1,22 @@
+{
+  "directories": ["src"],
+  "files": [
+    {
+      "path": "Cargo.toml",
+      "content": [
+        "[package]",
+        "name = \"{{project_name}}\"",
+        "version = \"0.1.0\"",
+        "edition = \"2021\""
+      ]
+    },
+    {
+      "path": "src/main.rs",
+      "content": [
+        "fn main() {",
+        "    println!(\"Hello, {{project_name}}!\");",
+        "}"
+      ]
+    }
+  ]
+}

@@ -2,6 +2,8 @@ use std::path::PathBuf;
 
 use inquire::{Confirm, Select, Text};
 
+use crate::utils::Template;
+
 pub struct CreateCommand {
     pub language: String,
     pub name: String,
@@ -52,18 +54,26 @@ impl CreateCommand {
 
         if let Some(path) = path {
             self.path = path;
-        } else {
-            if !Confirm::new(
-                "On default your path is the current directory. Do you want to use it?",
-            )
-            .prompt()?
-            {
-                let project_path = Text::new("Enter the path of the project")
-                    .with_help_message("This path is for your project folder path")
-                    .prompt()?;
-                self.path = PathBuf::from(project_path);
-            }
+        } else if !Confirm::new(
+            "On default your path is the current directory. Do you want to use it?",
+        )
+        .prompt()?
+        {
+            let project_path = Text::new("Enter the path of the project")
+                .with_help_message("This path is for your project folder path")
+                .prompt()?;
+            self.path = PathBuf::from(project_path);
         }
+
+        self.create_project()?;
+
+        Ok(())
+    }
+
+    fn create_project(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let template = Template::load_template(self.language.clone())?;
+
+        println!("{:?}", template);
 
         Ok(())
     }
