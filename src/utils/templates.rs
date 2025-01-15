@@ -21,8 +21,11 @@ pub struct File {
 
 impl Template {
     pub fn load_template(language: String) -> Result<Self, Box<dyn std::error::Error>> {
-        let path = format!("../../templates/{}.json", language.to_lowercase());
-        let template = std::fs::read_to_string(path)?;
+        let template_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("templates")
+            .join(format!("{}.json", language.to_lowercase()));
+
+        let template = std::fs::read_to_string(template_path)?;
         let template: Template = serde_json::from_str(&template)?;
 
         Ok(template)

@@ -73,7 +73,7 @@ impl CreateCommand {
     fn create_project(&self) -> Result<(), Box<dyn std::error::Error>> {
         let template = Template::load_template(self.language.clone())?;
 
-        println!("{:?}", template);
+        println!("{:?}", template.structure);
 
         Ok(())
     }
