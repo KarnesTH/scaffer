@@ -20,5 +20,6 @@
         ]
       }
     ]
-  }
+  },
+  "start_command": "cargo run"
 }

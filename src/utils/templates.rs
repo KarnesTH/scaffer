@@ -5,6 +5,7 @@ use serde::Deserialize;
 #[derive(Deserialize, Debug, Clone)]
 pub struct Template {
     pub structure: Structure,
+    pub start_command: String,
 }
 
 #[derive(Deserialize, Debug, Clone)]

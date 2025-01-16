@@ -45,5 +45,6 @@
         ]
       }
     ]
-  }
+  },
+  "start_command": "Open index.html in a browser"
 }

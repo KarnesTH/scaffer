@@ -19,5 +19,6 @@
         "content": ["module karnes-development/{{project_name}}", "", "go 1.23"]
       }
     ]
-  }
+  },
+  "start_command": "go run ."
 }

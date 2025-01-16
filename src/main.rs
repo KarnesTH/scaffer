@@ -1,7 +1,7 @@
 use clap::Parser;
 use scaffer::prelude::*;
 
-/// The scaffer CLI
+/// The main entry point of the application
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
 

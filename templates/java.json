@@ -48,5 +48,6 @@
         ]
       }
     ]
-  }
+  },
+  "start_command": "java -cp bin de.karnes.development.Main"
 }
