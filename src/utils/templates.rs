@@ -20,6 +20,15 @@ pub struct File {
 }
 
 impl Template {
+    /// Load the template for the given language
+    ///
+    /// # Arguments
+    ///
+    /// * `language` - The programming language of the project
+    ///
+    /// # Returns
+    ///
+    /// * `Result<Self, Box<dyn std::error::Error>>` - The result of the load template
     pub fn load_template(language: String) -> Result<Self, Box<dyn std::error::Error>> {
         let template_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
             .join("templates")
@@ -31,6 +40,16 @@ impl Template {
         Ok(template)
     }
 
+    /// Parse the project name in the content
+    ///
+    /// # Arguments
+    ///
+    /// * `project_name` - The name of the project
+    /// * `content` - The content to parse the project name
+    ///
+    /// # Returns
+    ///
+    /// * `Result<String, Box<dyn std::error::Error>>` - The result of the parse project name
     pub fn parse_project_name(
         &self,
         project_name: String,

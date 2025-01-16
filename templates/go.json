@@ -1,0 +1,23 @@
+{
+  "structure": {
+    "directories": [],
+    "files": [
+      {
+        "path": "main.go",
+        "content": [
+          "package main",
+          "",
+          "import \"fmt\"",
+          "",
+          "func main() {",
+          "    fmt.Println(\"Hello, {{project_name}}!\")",
+          "}"
+        ]
+      },
+      {
+        "path": "go.mod",
+        "content": ["module karnes-development/{{project_name}}", "", "go 1.23"]
+      }
+    ]
+  }
+}

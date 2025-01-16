@@ -11,6 +11,23 @@ pub struct CreateCommand {
 }
 
 impl CreateCommand {
+    /// Run the create command with the given options or prompt the user for them if they are not provided
+    ///
+    /// # Arguments
+    ///
+    /// * `language` - The programming language of the project
+    /// * `name` - The name of the project
+    /// * `path` - The path of the project
+    ///
+    /// # Returns
+    ///
+    /// * `Result<(), Box<dyn std::error::Error>>` - The result of the create command
+    ///
+    /// # Errors
+    ///
+    /// * If the user input is invalid
+    /// * If the project cannot be created
+    /// * If the .gitignore file cannot be fetched
     pub fn run_create(
         &mut self,
         language: Option<String>,
@@ -60,6 +77,16 @@ impl CreateCommand {
         Ok(())
     }
 
+    /// Create a project with the given options
+    ///
+    /// # Returns
+    ///
+    /// * `Result<(), Box<dyn std::error::Error>>` - The result of the create project
+    ///
+    /// # Errors
+    ///
+    /// * If the project cannot be created
+    /// * If the .gitignore file cannot be fetched
     fn create_project(&self) -> Result<(), Box<dyn std::error::Error>> {
         let template = Template::load_template(self.language.clone())?;
 
@@ -85,6 +112,15 @@ impl CreateCommand {
         Ok(())
     }
 
+    /// Fetch the .gitignore file for the given language
+    ///
+    /// # Arguments
+    ///
+    /// * `language` - The programming language of the project
+    ///
+    /// # Returns
+    ///
+    /// * `Result<String, Box<dyn std::error::Error>>` - The result of the fetch gitignore
     fn fetch_gitignore(&self, language: String) -> Result<String, Box<dyn std::error::Error>> {
         let url = format!(
             "https://raw.githubusercontent.com/github/gitignore/refs/heads/main/{}.gitignore",
@@ -96,6 +132,16 @@ impl CreateCommand {
         Ok(gitignore)
     }
 
+    /// Create the files for the project
+    ///
+    /// # Arguments
+    ///
+    /// * `template` - The template of the project
+    /// * `project_path` - The path of the project
+    ///
+    /// # Returns
+    ///
+    /// * `Result<(), Box<dyn std::error::Error>>` - The result of the create files
     fn create_files(
         &self,
         template: &Template,
