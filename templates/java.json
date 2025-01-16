@@ -1,0 +1,52 @@
+{
+  "structure": {
+    "directories": ["src/de/karnes/development"],
+    "files": [
+      {
+        "path": "src/de/karnes/development/Main.java",
+        "content": [
+          "package de.karnes.development;",
+          "",
+          "public class Main {",
+          "    public static void main(String[] args) {",
+          "        System.out.println(\"Hello, {{project_name}}!\");",
+          "    }",
+          "}"
+        ]
+      },
+      {
+        "path": ".classpath",
+        "content": [
+          "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+          "<classpath>",
+          "    <classpathentry kind=\"src\" path=\"src\"/>",
+          "    <classpathentry kind=\"con\" path=\"org.eclipse.jdt.launching.JRE_CONTAINER\"/>",
+          "    <classpathentry kind=\"output\" path=\"bin\"/>",
+          "</classpath>"
+        ]
+      },
+      {
+        "path": ".project",
+        "content": [
+          "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+          "<projectDescription>",
+          "    <name>{{project_name}}</name>",
+          "    <comment></comment>",
+          "    <projects>",
+          "    </projects>",
+          "    <buildSpec>",
+          "        <buildCommand>",
+          "            <name>org.eclipse.jdt.core.javabuilder</name>",
+          "            <arguments>",
+          "            </arguments>",
+          "        </buildCommand>",
+          "    </buildSpec>",
+          "    <natures>",
+          "        <nature>org.eclipse.jdt.core.javanature</nature>",
+          "    </natures>",
+          "</projectDescription>"
+        ]
+      }
+    ]
+  }
+}

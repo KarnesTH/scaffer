@@ -19,19 +19,7 @@ impl CreateCommand {
     ) -> Result<(), Box<dyn std::error::Error>> {
         println!("Creating Project...");
 
-        let programming_languages = vec![
-            "Rust",
-            "Python",
-            "JavaScript",
-            "TypeScript",
-            "Java",
-            "PHP",
-            "C",
-            "C++",
-            "C#",
-            "HTML",
-            "Go",
-        ];
+        let programming_languages = vec!["Rust", "Python", "Java", "PHP", "C", "C++", "HTML", "Go"];
 
         if let Some(language) = language {
             self.language = language;
