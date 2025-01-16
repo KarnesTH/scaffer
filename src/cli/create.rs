@@ -29,6 +29,8 @@ impl CreateCommand {
             "C",
             "C++",
             "C#",
+            "HTML",
+            "Go",
         ];
 
         if let Some(language) = language {
@@ -73,7 +75,49 @@ impl CreateCommand {
     fn create_project(&self) -> Result<(), Box<dyn std::error::Error>> {
         let template = Template::load_template(self.language.clone())?;
 
-        println!("{:?}", template.structure);
+        let project_path = self.path.join(&self.name);
+        std::fs::create_dir_all(&project_path)?;
+
+        for folder in template.structure.directories.clone() {
+            let folder_path = project_path.join(folder);
+            std::fs::create_dir_all(&folder_path)?;
+        }
+
+        self.create_files(&template, &project_path)?;
+
+        if Confirm::new("Do you want to add a .gitignore file?").prompt()? {
+            if let Ok(gitignore) = self.fetch_gitignore(self.language.clone()) {
+                let gitignore_path = project_path.join(".gitignore");
+                std::fs::write(&gitignore_path, gitignore)?;
+            } else {
+                println!("Couldn't fetch .gitignore file for this language");
+            }
+        }
+
+        Ok(())
+    }
+
+    fn fetch_gitignore(&self, language: String) -> Result<String, Box<dyn std::error::Error>> {
+        let url = format!(
+            "https://raw.githubusercontent.com/github/gitignore/refs/heads/main/{}.gitignore",
+            language
+        );
+
+        let gitignore = ureq::get(&url).call()?.into_string()?;
+
+        Ok(gitignore)
+    }
+
+    fn create_files(
+        &self,
+        template: &Template,
+        project_path: &PathBuf,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        for file in template.structure.files.clone() {
+            let file_path = project_path.join(file.path);
+            let content = template.parse_project_name(self.name.clone(), file.content.clone())?;
+            std::fs::write(&file_path, content)?;
+        }
 
         Ok(())
     }

@@ -1,0 +1,17 @@
+{
+  "structure": {
+    "directories": [],
+    "files": [
+      {
+        "path": "main.py",
+        "content": [
+          "def main():",
+          "    print('Hello, {{project_name}}!')",
+          "",
+          "if __name__ == '__main__':",
+          "    main()"
+        ]
+      }
+    ]
+  }
+}

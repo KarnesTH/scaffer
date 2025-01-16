@@ -1,0 +1,49 @@
+{
+  "structure": {
+    "directories": ["assets", "assets/css", "assets/js"],
+    "files": [
+      {
+        "path": "index.html",
+        "content": [
+          "<!DOCTYPE html>",
+          "<html lang=\"en\">",
+          " <head>",
+          "   <meta charset=\"UTF-8\">",
+          "   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
+          "   <link rel=\"stylesheet\" href=\"assets/css/main.css\"",
+          "   <title>{{project_name}}</title>",
+          " </head>",
+          " <body>",
+          "   <h1>Hello, {{project_name}}!</h1>",
+          "   <script src=\"assets/js/main.js\" defer></script>",
+          " </body>",
+          "</html>"
+        ]
+      },
+      {
+        "path": "assets/css/main.css",
+        "content": [
+          "* {",
+          "  margin: 0;",
+          "  padding: 0;",
+          "  box-sizing: border-box;",
+          "}"
+        ]
+      },
+      {
+        "path": "assets/js/main.js",
+        "content": [
+          "\"use strict\";",
+          "",
+          "(() => {",
+          "  const init = () => {",
+          "    console.log('Hello, {{project_name}}!');",
+          "  };",
+          "",
+          "  init();",
+          "})();"
+        ]
+      }
+    ]
+  }
+}
