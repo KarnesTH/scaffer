@@ -63,3 +63,29 @@ impl Template {
         Ok(content)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_load_template() {
+        let template = Template::load_template("rust".to_string()).unwrap();
+
+        assert_eq!(template.start_command, "cargo run".to_string());
+        assert_eq!(template.structure.directories.len(), 1);
+        assert_eq!(template.structure.files.len(), 2);
+    }
+
+    #[test]
+    fn test_parse_project_name() {
+        let template = Template::load_template("rust".to_string()).unwrap();
+        let content = vec!["{{project_name}}".to_string()];
+
+        let parsed_content = template
+            .parse_project_name("test".to_string(), content)
+            .unwrap();
+
+        assert_eq!(parsed_content, "test".to_string());
+    }
+}

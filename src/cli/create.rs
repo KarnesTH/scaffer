@@ -1,5 +1,5 @@
 use colored::*;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use inquire::{Confirm, Select, Text};
 
@@ -165,9 +165,15 @@ impl CreateCommand {
     ///
     /// * `Result<String, Box<dyn std::error::Error>>` - The result of the fetch gitignore
     fn fetch_gitignore(&self, language: String) -> Result<String, Box<dyn std::error::Error>> {
+        let formatted_language = if language == "C++" {
+            language.replace("+", "%2B")
+        } else {
+            language
+        };
+
         let url = format!(
             "https://raw.githubusercontent.com/github/gitignore/refs/heads/main/{}.gitignore",
-            language
+            formatted_language
         );
 
         let gitignore = ureq::get(&url).call()?.into_string()?;
@@ -188,7 +194,7 @@ impl CreateCommand {
     fn create_files(
         &self,
         template: &Template,
-        project_path: &PathBuf,
+        project_path: &Path,
     ) -> Result<(), Box<dyn std::error::Error>> {
         println!(
             "└─ {} {}",
@@ -230,5 +236,41 @@ impl Default for CreateCommand {
             name: String::new(),
             path: std::env::current_dir().expect("Failed to use current directory"),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_create_command_default() {
+        let create_command = CreateCommand::default();
+
+        assert_eq!(create_command.language, String::new());
+        assert_eq!(create_command.name, String::new());
+        assert_eq!(
+            create_command.path,
+            std::env::current_dir().expect("Failed to use current directory")
+        );
+    }
+
+    #[test]
+    fn test_create_command_capitalize() {
+        let create_command = CreateCommand::default();
+
+        assert_eq!(create_command.capitalize("test"), "Test");
+        assert_eq!(create_command.capitalize("Test"), "Test");
+        assert_eq!(create_command.capitalize("tEST"), "TEST");
+        assert_eq!(create_command.capitalize("t"), "T");
+        assert_eq!(create_command.capitalize(""), "");
+    }
+
+    #[test]
+    fn test_fetch_gitignore() {
+        let create_command = CreateCommand::default();
+
+        let gitignore = create_command.fetch_gitignore("Rust".to_string()).unwrap();
+        assert!(gitignore.contains("target"));
     }
 }
