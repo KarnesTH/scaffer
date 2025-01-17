@@ -1,0 +1,57 @@
+{
+  "structure": {
+    "directories": ["src", "include"],
+    "files": [
+      {
+        "path": "src/main.c",
+        "content": [
+          "#include \"../include/main.h\"",
+          "",
+          "int main() {",
+          "   printf(\"Hello, {{project_name}}!\\n\");",
+          "   return 0;",
+          "}"
+        ]
+      },
+      {
+        "path": "include/main.h",
+        "content": [
+          "#ifndef MAIN_H",
+          "#define MAIN_H",
+          "",
+          "#include <stdio.h>",
+          "#include <stdlib.h>",
+          "",
+          "#endif"
+        ]
+      },
+      {
+        "path": "Makefile",
+        "content": [
+          "CC = gcc",
+          "CFLAGS = -Wall -Wextra -I./include",
+          "",
+          "SRC_DIR = src",
+          "BUILD_DIR = build",
+          "",
+          "TARGET = programm",
+          "",
+          "SRCS = $(wildcard $(SRC_DIR)/*.c)",
+          "OBJS = $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)",
+          "",
+          "$(BUILD_DIR)/$(TARGET): $(OBJS)",
+          "\t$(CC) $(OBJS) -o $@",
+          "",
+          "$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c",
+          "\tmkdir -p $(BUILD_DIR)",
+          "\t$(CC) $(CFLAGS) -c $< -o $@",
+          "",
+          ".PHONY: clean",
+          "clean:",
+          "\trm -rf $(BUILD_DIR)"
+        ]
+      }
+    ]
+  },
+  "start_command": "make && ./build/programm"
+}

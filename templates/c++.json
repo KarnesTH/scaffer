@@ -1,0 +1,57 @@
+{
+  "structure": {
+    "directories": ["src", "include"],
+    "files": [
+      {
+        "path": "src/main.cpp",
+        "content": [
+          "#include \"../include/main.hpp\"",
+          "",
+          "int main() {",
+          "    std::cout << \"Hello, {{project_name}}!\" << std::endl;",
+          "    return 0;",
+          "}"
+        ]
+      },
+      {
+        "path": "include/main.hpp",
+        "content": [
+          "#ifndef MAIN_HPP",
+          "#define MAIN_HPP",
+          "",
+          "#include <iostream>",
+          "#include <string>",
+          "",
+          "#endif"
+        ]
+      },
+      {
+        "path": "Makefile",
+        "content": [
+          "CXX = g++",
+          "CXXFLAGS = -Wall -Wextra -I./include -std=c++17",
+          "",
+          "SRC_DIR = src",
+          "BUILD_DIR = build",
+          "",
+          "TARGET = program",
+          "",
+          "SRCS = $(wildcard $(SRC_DIR)/*.cpp)",
+          "OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)",
+          "",
+          "$(BUILD_DIR)/$(TARGET): $(OBJS)",
+          "\t$(CXX) $(OBJS) -o $@",
+          "",
+          "$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp",
+          "\tmkdir -p $(BUILD_DIR)",
+          "\t$(CXX) $(CXXFLAGS) -c $< -o $@",
+          "",
+          ".PHONY: clean",
+          "clean:",
+          "\trm -rf $(BUILD_DIR)"
+        ]
+      }
+    ]
+  },
+  "start_command": "make && ./build/program"
+}

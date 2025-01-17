@@ -1,0 +1,66 @@
+{
+  "structure": {
+    "directories": ["public", "src", "templates", "config"],
+    "files": [
+      {
+        "path": "public/index.php",
+        "content": [
+          "<?php",
+          "require_once __DIR__ . '/../src/bootstrap.php';",
+          "",
+          "// Application entry point"
+        ]
+      },
+      {
+        "path": "src/bootstrap.php",
+        "content": [
+          "<?php",
+          "",
+          "// Error reporting",
+          "error_reporting(E_ALL);",
+          "ini_set('display_errors', '1');",
+          "",
+          "// Load configuration",
+          "require_once __DIR__ . '/../config/config.php';"
+        ]
+      },
+      {
+        "path": "config/config.php",
+        "content": [
+          "<?php",
+          "",
+          "// Configuration settings",
+          "define('APP_NAME', '{{project_name}}');",
+          "define('APP_ENV', 'development');"
+        ]
+      },
+      {
+        "path": ".htaccess",
+        "content": [
+          "RewriteEngine On",
+          "RewriteCond %{REQUEST_FILENAME} !-f",
+          "RewriteCond %{REQUEST_FILENAME} !-d",
+          "RewriteRule ^ index.php [QSA,L]"
+        ]
+      },
+      {
+        "path": "composer.json",
+        "content": [
+          "{",
+          "    \"name\": \"{{project_name}}\",",
+          "    \"description\": \"A PHP project\",",
+          "    \"require\": {",
+          "        \"php\": \">=7.4\"",
+          "    },",
+          "    \"autoload\": {",
+          "        \"psr-4\": {",
+          "            \"App\\\\\": \"src/\"",
+          "        }",
+          "    }",
+          "}"
+        ]
+      }
+    ]
+  },
+  "start_command": "php -S localhost:8000 -t public"
+}
