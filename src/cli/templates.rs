@@ -51,6 +51,19 @@ impl Templates {
         Ok(templates)
     }
 
+    /// Add a new template
+    ///
+    /// # Arguments
+    ///
+    /// * `language` - The language of the template
+    ///
+    /// # Returns
+    ///
+    /// The result of adding a new template
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if the template cannot be added
     pub fn add_template(language: Option<String>) -> Result<(), Box<dyn std::error::Error>> {
         let language = if let Some(language) = language {
             language
@@ -97,6 +110,17 @@ impl Templates {
         Ok(())
     }
 
+    /// Parse the directories
+    ///
+    /// Take the input from the user to add the directories information
+    ///
+    /// # Returns
+    ///
+    /// The list of directories
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if the directories cannot be parsed
     fn parse_directories() -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let mut directories = vec![];
 
@@ -111,6 +135,17 @@ impl Templates {
         Ok(directories)
     }
 
+    /// Parse the files
+    ///
+    /// Take the input from the user to add the files information
+    ///
+    /// # Returns
+    ///
+    /// The list of files
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if the files cannot be parsed
     fn parse_files() -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
         let mut files = HashMap::new();
 
@@ -147,6 +182,15 @@ impl Templates {
         Ok(files)
     }
 
+    /// The render configuration for the content
+    ///
+    /// # Returns
+    ///
+    /// The render configuration for the content
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if the render configuration cannot be created
     fn content_render_config() -> RenderConfig<'static> {
         RenderConfig::default()
             .with_canceled_prompt_indicator(Styled::new("<skipped>").with_fg(Color::DarkYellow))
