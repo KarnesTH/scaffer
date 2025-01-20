@@ -16,4 +16,22 @@ pub enum Commands {
         #[arg(short, long)]
         path: Option<PathBuf>,
     },
+    Templates {
+        #[command(subcommand)]
+        subcommand: TemplatesCommand,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum TemplatesCommand {
+    List {
+        /// The programming language to filter the templates
+        #[arg(short, long)]
+        filter: Option<String>,
+    },
+    Add {
+        /// The programming language of the template
+        #[arg(short, long)]
+        language: Option<String>,
+    },
 }

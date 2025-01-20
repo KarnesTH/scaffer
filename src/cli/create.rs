@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 
 use inquire::{Confirm, Select, Text};
 
-use crate::{prelude::PROGRAMMING_LANGUAGES, utils::Template};
+use crate::utils::{Config, Template};
 
 pub struct CreateCommand {
     pub language: String,
@@ -34,10 +34,11 @@ impl CreateCommand {
         language: Option<String>,
         name: Option<String>,
         path: Option<PathBuf>,
+        config: &Config,
     ) -> Result<(), Box<dyn std::error::Error>> {
         println!("{}", "Creating Project...".bright_green().bold());
 
-        let programming_languages = PROGRAMMING_LANGUAGES.to_vec();
+        let programming_languages = config.languages.clone();
 
         if let Some(language) = language {
             self.language = self.capitalize(language.as_str());
@@ -48,7 +49,7 @@ impl CreateCommand {
             )
             .prompt()?;
 
-            self.language = self.capitalize(selected_language).to_string();
+            self.language = self.capitalize(selected_language.as_str()).to_string();
         }
 
         if let Some(name) = name {

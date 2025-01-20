@@ -10,6 +10,15 @@ pub struct Config {
 }
 
 impl Config {
+    /// Load the configuration from the config file
+    ///
+    /// # Returns
+    ///
+    /// The configuration object
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if the config file does not exist or if the config file
     pub fn load() -> Result<Self, Box<dyn std::error::Error>> {
         let config_dir = Self::get_config_dir()?;
         let config_file = config_dir.join("config.toml");
@@ -24,6 +33,15 @@ impl Config {
         Ok(config)
     }
 
+    /// Get the configuration directory
+    ///
+    /// # Returns
+    ///
+    /// The configuration directory
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if the configuration directory does not exist and cannot be created
     fn get_config_dir() -> Result<PathBuf, Box<dyn std::error::Error>> {
         let config = dirs::config_dir().ok_or("Could not find config directory")?;
         let config_dir = config.join("karnes-development/scaffer");
@@ -33,6 +51,11 @@ impl Config {
         Ok(config_dir)
     }
 
+    /// Save the configuration to the config file
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if the configuration cannot be saved
     pub fn save(&self) -> Result<(), Box<dyn std::error::Error>> {
         let config_dir = Self::get_config_dir()?;
         let config_file = config_dir.join("config.toml");
@@ -41,6 +64,11 @@ impl Config {
         Ok(())
     }
 
+    /// Initialize the configuration
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if the configuration cannot be initialized
     pub fn init() -> Result<(), Box<dyn std::error::Error>> {
         let config_dir = Self::get_config_dir()?;
         let config_file = config_dir.join("config.toml");

@@ -1,9 +1,11 @@
 use clap::Parser;
-pub use commands::Commands;
+pub use commands::{Commands, TemplatesCommand};
 pub use create::CreateCommand;
+pub use templates::Templates;
 
 pub mod commands;
 pub mod create;
+pub mod templates;
 
 #[derive(Parser)]
 #[clap(
