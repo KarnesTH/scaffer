@@ -2,6 +2,8 @@ use std::path::PathBuf;
 
 use serde::Deserialize;
 
+use super::Config;
+
 #[derive(Deserialize, Debug, Clone)]
 pub struct Template {
     pub structure: Structure,
@@ -31,8 +33,9 @@ impl Template {
     ///
     /// * `Result<Self, Box<dyn std::error::Error>>` - The result of the load template
     pub fn load_template(language: String) -> Result<Self, Box<dyn std::error::Error>> {
-        let template_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join("templates")
+        let config = Config::load()?;
+        let template_path = config
+            .template_dir
             .join(format!("{}.json", language.to_lowercase()));
 
         let template = std::fs::read_to_string(template_path)?;

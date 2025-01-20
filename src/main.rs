@@ -3,6 +3,8 @@ use scaffer::prelude::*;
 
 /// The main entry point of the application
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let config = Config::load()?;
+
     let cli = Cli::parse();
 
     match cli.commands {
