@@ -25,11 +25,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
             TemplatesCommand::Add { language } => {
-                if let Some(language) = language {
-                    println!("Adding with language: {}", language);
-                }
-
-                println!("Adding template...");
+                Templates::add_template(language)?;
             }
         },
     }

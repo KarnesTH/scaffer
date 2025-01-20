@@ -1,4 +1,11 @@
-use crate::utils::{Config, Template};
+use std::{collections::HashMap, path::PathBuf};
+
+use inquire::{
+    ui::{Color, RenderConfig, Styled},
+    Confirm, Editor, Text,
+};
+
+use crate::utils::{Config, File, Structure, Template};
 
 pub struct Templates {
     pub templates: Vec<Template>,
@@ -42,5 +49,106 @@ impl Templates {
         }
 
         Ok(templates)
+    }
+
+    pub fn add_template(language: Option<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let language = if let Some(language) = language {
+            language
+        } else {
+            Text::new("Enter the language of the template. (e.g. python, rust etc)").prompt()?
+        };
+
+        let directories = Self::parse_directories()?;
+
+        let files = Self::parse_files()?;
+
+        let structure = Structure {
+            directories,
+            files: files
+                .iter()
+                .map(|(path, content)| File {
+                    path: PathBuf::from(path),
+                    content: vec![content.clone()],
+                })
+                .collect(),
+        };
+
+        let start_command = Text::new("Please enter the start command:")
+            .with_help_message(
+                "Enter the start command for the project. (e.g. cargo run, python main.py)",
+            )
+            .prompt()?;
+
+        let template = Template {
+            structure,
+            start_command,
+        };
+
+        let config = Config::load()?;
+        let template_path = config
+            .template_dir
+            .join(format!("{}.json", language.to_lowercase()));
+
+        let template = serde_json::to_string(&template)?;
+        std::fs::write(template_path, template)?;
+
+        println!("Successfully added new template");
+
+        Ok(())
+    }
+
+    fn parse_directories() -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let mut directories = vec![];
+
+        let add_dictionary = Text::new("Please enter your dictonaries:")
+            .with_help_message("Enter your directonaries comma sperated. (e.g src, assets)")
+            .prompt()?;
+
+        for directory in add_dictionary.split(",") {
+            directories.push(directory.to_string());
+        }
+
+        Ok(directories)
+    }
+
+    fn parse_files() -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
+        let mut files = HashMap::new();
+
+        loop {
+            let add_file = Confirm::new("Do you want to add a file?").prompt()?;
+
+            if !add_file {
+                break;
+            }
+
+            let path = Text::new("Please enter the path your file name:")
+                .with_help_message("Enter your file path. (e.g main.py, index.html, src/main.rs)")
+                .prompt()?;
+
+            let content = Editor::new("Please enter your content:")
+                .with_formatter(&|submission| {
+                    let char_count = submission.chars().count();
+                    if char_count == 0 {
+                        String::from("<skipped>")
+                    } else if char_count <= 20 {
+                        submission.into()
+                    } else {
+                        let mut substr: String = submission.chars().take(17).collect();
+                        substr.push_str("...");
+                        substr
+                    }
+                })
+                .with_render_config(Self::content_render_config())
+                .prompt()?;
+
+            files.insert(path, content);
+        }
+
+        Ok(files)
+    }
+
+    fn content_render_config() -> RenderConfig<'static> {
+        RenderConfig::default()
+            .with_canceled_prompt_indicator(Styled::new("<skipped>").with_fg(Color::DarkYellow))
     }
 }
