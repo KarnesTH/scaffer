@@ -2,7 +2,7 @@ use std::{collections::HashMap, path::PathBuf};
 
 use inquire::{
     ui::{Color, RenderConfig, Styled},
-    Confirm, Editor, Text,
+    Confirm, Editor, Select, Text,
 };
 
 use crate::utils::{Config, File, Structure, Template};
@@ -37,7 +37,13 @@ impl Templates {
         for entry in std::fs::read_dir(template_dir)? {
             let entry = entry?;
             let path = entry.path();
-            let file_name = path.file_name().unwrap().to_str().unwrap().to_string();
+            let file_name = path
+                .file_name()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string()
+                .replace(".json", "");
 
             if let Some(filter) = &filter {
                 if file_name.contains(filter) {
@@ -106,6 +112,46 @@ impl Templates {
         std::fs::write(template_path, template)?;
 
         println!("Successfully added new template");
+
+        Ok(())
+    }
+
+    /// Remove a template
+    ///
+    /// # Arguments
+    ///
+    /// * `template` - The template to remove
+    ///
+    /// # Returns
+    ///
+    /// The result of removing a template
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if the template cannot be removed
+    pub fn remove_template(template: Option<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let config = Config::load()?;
+
+        let template_list = Self::list_templates(template.clone(), &config)?;
+
+        let template_path = if let Some(template) = template {
+            config
+                .template_dir
+                .join(format!("{}.json", template.to_lowercase()))
+        } else {
+            let selelected_template =
+                Select::new("Please select the template to remove:", template_list).prompt()?;
+            config
+                .template_dir
+                .join(format!("{}.json", selelected_template.to_lowercase()))
+        };
+
+        if template_path.exists() {
+            std::fs::remove_file(template_path)?;
+            println!("Successfully removed template");
+        } else {
+            println!("Template does not exist");
+        }
 
         Ok(())
     }

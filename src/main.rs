@@ -27,6 +27,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             TemplatesCommand::Add { language } => {
                 Templates::add_template(language)?;
             }
+            TemplatesCommand::Remove { template } => {
+                Templates::remove_template(template)?;
+            }
         },
     }
 

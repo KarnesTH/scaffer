@@ -34,4 +34,9 @@ pub enum TemplatesCommand {
         #[arg(short, long)]
         language: Option<String>,
     },
+    Remove {
+        /// The programming language of the template
+        #[arg(short, long)]
+        template: Option<String>,
+    },
 }
