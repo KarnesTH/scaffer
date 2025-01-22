@@ -30,6 +30,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             TemplatesCommand::Remove { template } => {
                 Templates::remove_template(template)?;
             }
+            TemplatesCommand::Update { language } => {
+                Templates::update_template(language)?;
+            }
         },
     }
 

@@ -156,6 +156,99 @@ impl Templates {
         Ok(())
     }
 
+    /// Update a template
+    ///
+    /// # Arguments
+    ///
+    /// * `language` - The language of the template
+    ///
+    /// # Returns
+    ///
+    /// The result of updating a template
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if the template cannot be updated
+    pub fn update_template(language: Option<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let config = Config::load()?;
+        let template_list = Self::list_templates(language.clone(), &config)?;
+
+        let template_path = if let Some(language) = language {
+            config
+                .template_dir
+                .join(format!("{}.json", language.to_lowercase()))
+        } else {
+            let selected_template =
+                Select::new("Please select the template to update:", template_list).prompt()?;
+            config
+                .template_dir
+                .join(format!("{}.json", selected_template.to_lowercase()))
+        };
+
+        if template_path.exists() {
+            let template = std::fs::read_to_string(template_path.clone())?;
+            let mut template: Template = serde_json::from_str(&template)?;
+
+            println!("Current start command: {}", template.start_command);
+            if Confirm::new("Do you want to update the start command?").prompt()? {
+                let start_command = Text::new("Please enter the start command:")
+                    .with_help_message(
+                        "Enter the start command for the project. (e.g. cargo run, python main.py)",
+                    )
+                    .prompt()?;
+                template.start_command = start_command;
+            }
+
+            println!("Current directories:");
+            for dir in &template.structure.directories {
+                println!("  - {}", dir);
+            }
+            if Confirm::new("Do you want to update the directories?").prompt()? {
+                let directories = Self::parse_directories()?;
+                template.structure.directories = directories;
+            }
+
+            println!("Current files:");
+            for file in &template.structure.files {
+                println!("  - {}", file.path.display());
+            }
+            if Confirm::new("Do you want to update the files?").prompt()? {
+                let files = Self::parse_files()?;
+                let mut new_files = Vec::new();
+
+                for old_file in template.structure.files {
+                    if let Some(new_content) = files.get(old_file.path.to_str().unwrap()) {
+                        let mut content_history = old_file.content;
+                        content_history.push(new_content.clone());
+                        new_files.push(File {
+                            path: old_file.path,
+                            content: content_history,
+                        });
+                    }
+                }
+
+                for (path, content) in files {
+                    if !new_files.iter().any(|f| f.path == PathBuf::from(&path)) {
+                        new_files.push(File {
+                            path: PathBuf::from(path),
+                            content: vec![content],
+                        });
+                    }
+                }
+
+                template.structure.files = new_files;
+            }
+
+            let template = serde_json::to_string(&template)?;
+            std::fs::write(template_path, template)?;
+            println!("Template successfully updated!");
+        } else {
+            println!("Template does not exist");
+        }
+
+        Ok(())
+    }
+
     /// Parse the directories
     ///
     /// Take the input from the user to add the directories information
